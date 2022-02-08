@@ -2,7 +2,7 @@
 
 ---
 
-Amos Spinner Input Firmware for Arduino &amp; ATtiny85
+**Amos Spinner Input Firmware for Arduino &amp; ATtiny85**
 
 
 Arkanoid와 같은 게임의 경우, 주입력 장치로 스피너를 사용한다.
@@ -127,7 +127,7 @@ ATtiny85를 이용할 경우, 아두이노 보드의 쓸 때에 비해 크기면
 
 각 인터페이스 별 지원 커맨드들은 다음과 같다.
 
-* Serial
+### Serial
 
 문자열 포맷으로 되어 있고, 각 커맨드는 CR 문자로 끝난다.
 
@@ -161,7 +161,7 @@ err:메시지
 ```
 
 
-* I2C
+### I2C
 
 - Read : 현재의 count 값
 
@@ -173,16 +173,16 @@ err:메시지
 
 각 command에 대한 설명이다.
 
-| command | 설명 | 타겟 |
-|---------|------|------|
-| 0x41 | write value
-| 0x42 | set mode
-| 0x43 | set sample rate
-| 0x44 | set min value | 조이스틱
-| 0x45 | set max value | 조이스틱
-| 0x4F | set i2c address
+| command | 설명            | 타겟    |
+|---------|-----------------|---------|
+| 0x41    | write value     |         |
+| 0x42    | set mode        |         |
+| 0x43    | set sample rate |         |
+| 0x44    | set min value   | 조이스틱 |
+| 0x45    | set max value   | 조이스틱 |
+| 0x4F    | set i2c address |         |
 
-* SPI
+### SPI
 
 SPI 인터페이스는 3바이트로 이루어져 있고, 포맷은 다음과 같다.
 
@@ -192,15 +192,15 @@ SPI 인터페이스는 3바이트로 이루어져 있고, 포맷은 다음과 �
 
 각 command에 대한 설명이다.
 
-| command | 설명 | 타겟 |
-|---------|------|------|
-| 0x00 | read value
-| 0x41 | write value
-| 0x42 | set mode
-| 0x43 | set sample rate
-| 0x44 | set min value | 조이스틱
-| 0x45 | set max value | 조이스틱
-| 0x4F | set i2c address
+| command | 설명            | 타겟     |
+|---------|-----------------|----------|
+| 0x00    | read value      |         |
+| 0x41    | write value     |         |
+| 0x42    | set mode        |         |
+| 0x43    | set sample rate |         |
+| 0x44    | set min value   | 조이스틱 |
+| 0x45    | set max value   | 조이스틱 |
+| 0x4F    | set i2c address |         |
 
 
 Arduino Leonardo 계열처럼 USB 인터페이스를 사용하지 않는 경우, 실제로 Rotary Encoder의 카운트 값을 받아서 마우스 장치로 동작하게 하기 위해서는 별도로 전용 드라이버가 존재해야 한다.

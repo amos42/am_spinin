@@ -1,92 +1,100 @@
 # am_spinin
 
----
-
 **Amos Spinner Input Firmware for Arduino &amp; ATtiny85**
 
+---
 
-Arkanoid와 같은 게임의 경우, 주입력 장치로 스피너를 사용한다.
-이 스피너를 구현하기 위해서는 Rotary Encoder와 같은 장치를 사용하면 된다. 이때 사용할 Rotary Encoder는 RPM 측정용 단상형이 아니라, 양방향 회전을 위한 2상형 이상을 사용해야 하며, 해상도는 최소 100 P/R 이상이어야 한다. 사실 고전 아케이드 게임이 목적이라면 그 이상의 고해상도를 필요로 하지 않는다.
+<p align="center">
+  <p align="center">
+    <a href="README.md">English</a>
+    ·
+    <a href="README_kr.md">한국어</a>
+  </p>
+</p>
 
-Rotary Encoder는 다음과 같은 형태로 주로 판매되고 있다.
+---
+Games like Arkanoid use spinners as injection force devices.
+To implement this spinner, you can use a device such as a Rotary Encoder. In this case, the rotary encoder to be used is not a single-phase type for RPM measurement, but a two-phase type or higher for bi-directional rotation, and the resolution must be at least 100 P/R. In fact, you don't need any higher resolution than that for classic arcade games.
+
+Rotary Encoders are mainly sold in the following forms.
 
 ![Rotary Encoder](images/rotary_encoder.jpg)
 
-출력핀은 총4개로, VCC, GND의 전원핀 외에 A, B 핀이 존재한다. 전원은 보통 5V~24V이다.
+There are a total of 4 output pins, and there are A and B pins in addition to the power pins of VCC and GND. The power supply is usually 5V to 24V.
 
-이를 실제로 이용하기 위해서는 Rotary Encoder 컨트롤러가 필요하다. 컨트롤러는 LS7366R과 같은 카운터칩을 사용하는 것이 제일 좋긴 하지만, 별도 모듈로 판매되는 것을 찾기 힘들고, 별도의 엔코더 카운터 보드를 구매할 경우 산업용이라 부담스러운 가격대이기에 게임기에 사용하기엔 부적절하다.
-어차피 사람의 손 움직임을 입력 받는 것이기 때문에 고속, 고정밀 컨트롤러가 필요하진 않기에, Arduino 정도의 성능으로도 충분히 스피너용 컨트롤러를 만들 수 있다.
+In order to actually use this, a Rotary Encoder controller is required. It is best to use a counter chip like the LS7366R for the controller, but it is difficult to find one that is sold as a separate module, and if you purchase a separate encoder counter board, it is inappropriate for use in a game machine because it is a burdensome price for industrial use.
+Because it receives human hand movements anyway, a high-speed, high-precision controller is not required, so you can make a controller for a spinner with the performance of an Arduino.
 
-아두이노 레오나르도를 사용하게 되면 마우스 장치로 동작하기 때문에 그냥 라즈베리파이의 USB 단자에 연결하는 것만으로 별도의 드라이버 없이 동작하게 할 수 있다.
+If you use Arduino Leonardo, it operates as a mouse device, so you can operate it without a separate driver by simply connecting it to the USB port of the Raspberry Pi.
 
-![스피너 연결도](images/spinner_connect_leonardo.jpg)
+![Spinner Connection Diagram](images/spinner_connect_leonardo.jpg)
 
-아두이노 레오나르도 정품보다는 SparkFun사의 프로마이크로를 사용하는 경우가 많다. 가격도 더 저렴하고 크기도 더 작아서 게임기에 내장하기엔 더 유리하다.
+In many cases, SparkFun's Promicro is used rather than the genuine Arduino Leonardo. It's cheaper and smaller in size, so it's more advantageous to be built into a game machine.
 
-![스피너 연결도](images/spinner_connect_promicro.jpg)
+![Spinner Connection Diagram](images/spinner_connect_promicro.jpg)
 
-프로마이크로의 클론 제품들이 많이 있다. 불행히도 이런 클론 제품들은 전원 파트가 그리 좋지 못 한 편이다. 이런 제품들의 경우 부하가 걸렸을 때 VCC의 전압이 5V 미만으로 나오는 경우가 많다. 이 경우엔 Rotary Encoder가 동작하기에 충분한 전압이 공급되지 않아서 정상적인 동작을 하지 않게 된다.
+There are many clones of Promicro. Unfortunately, these clones do not have good power supply parts. In the case of these products, the voltage of VCC is often less than 5V when a load is applied. In this case, the rotary encoder does not operate normally because sufficient voltage is not supplied to operate.
 
-이럴 땐 Rotary Encoder의 VCC를 프로마이크로가 아닌 라즈베리파이의 5V 핀으로부터 공급받도록 하면 된다.
+In this case, it is enough to receive the VCC of the Rotary Encoder from the 5V pin of the Raspberry Pi, not the Pro Micro.
 
-![스피너 연결도](images/spinner_connect_promicro_clone.jpg)
+![Spinner Connection Diagram](images/spinner_connect_promicro_clone.jpg)
 
-아두이노 레오나르도를 사용할 경우엔 USB 포트를 한개 점유한다는 단점이 있다. 이는 동시에 라즈베리파이의 노출 된 후면 부분을 디자인적인 단점으로도 이어진다.
-또한 한번 펌웨어의 기록이 끝난 후엔 사후에 설정을 변경한다거나 기능을 변경하는 것에 제약이 걸린다.
+The disadvantage of using an Arduino Leonardo is that it occupies one USB port. At the same time, the exposed rear part of the Raspberry Pi leads to design shortcomings.
+Also, once the recording of the firmware is finished, there is a restriction in changing settings or changing functions afterwards.
 
-이를 해결하기 위해 아두이노는 Rotary Encoder의 카운팅만을 전담하고, 이를 라즈베리파이에 전달하여 실제 마우스 장치 등으로 재현하는 것은 드라이버를 통해서 하는 방법을 생각해 볼 수 있다. 이 경우엔 앞서의 경우보다 제작 난이도는 좀 더 올라가긴 하지만 훨씬 유연하게 장치를 운영할 수 있다.
+In order to solve this problem, the Arduino is in charge of counting only the Rotary Encoder, and it is possible to think of a way to reproduce it with a real mouse device by transferring it to the Raspberry Pi through a driver. In this case, the production difficulty is slightly higher than in the previous case, but the device can be operated much more flexibly.
 
-실제로 컨트롤러로 사용할 보드는 Arduino Pro Mini이다.
+Actually, the board to be used as the controller is the Arduino Pro Mini.
 
 ![Arduino Pro Mini](images/arduino_pro_mini.jpg)
 
-펌웨어 업로드가 완료 되면 해당 컨트롤 보드에 결선을 시작한다.
-Rotary Encoder의 A, B 핀은 보드의 GPIO 2번과 3번 핀에 각각 연결한다.
+When the firmware upload is completed, start wiring to the corresponding control board.
+The Rotary Encoder's A and B pins are respectively connected to GPIO pins 2 and 3 of the board.
 
-컨트롤 보드의 A4, A5핀이 I2C용 핀이며, 각각 SDA, SCL 핀이다.
+A4 and A5 pins of the control board are I2C pins, and they are SDA and SCL pins, respectively.
 
-라즈베리파이에 연결시, I2C 핀, 혹은 SPI 핀에 연결해 주면 된다.
+When connecting to Raspberry Pi, connect to I2C pin or SPI pin.
 
-![스피너 연결도](images/spinner_connect_promini.jpg)
+![Spinner Connection Diagram](images/spinner_connect_promini.jpg)
 
-단, 아두이노가 5V 버전일 경우, 라즈베리파이는 3.3V를 사용하기 때문에 이를 다이렉트로 연결하면 문제가 생길 가능성이 있다. 만약 아두이노가 3.3V 버전이라면 라즈베리파이와는 문제가 없겠지만, 대신 로터리 엔코더가 5V를 사용하기 때문에 역시 문제가 생길 가능성이 있다.
+However, if the Arduino is the 5V version, the Raspberry Pi uses 3.3V, so there may be a problem if you connect it directly. If the Arduino is a 3.3V version, there will be no problem with the Raspberry Pi, but instead, there is a possibility that there is a problem because the rotary encoder uses 5V.
 
-비록 신호선이기에 전류의 크기가 크지 않고, 신호 레벨로는 3.3V나 5V나 0과 1이 명확할 경우엔 레벨값을 서로 동일하게 인식 가능하기 때문에 당장은 잘 동작하는 것처럼 보일 수 있다. 하지만 지속적으로 오버 된 전압이 계속 가해질 경우 장기적으로는 보드에 무리를 줄 수 있기에, 가급적 서로의 전압에 맞춰 신호 전압 레벨을 변환해 주는 Level Converter라는 것을 사용하는 것이 좋다.
+Although it is a signal line, the magnitude of the current is not large, and when 3.3V, 5V, or 0 and 1 are clear as a signal level, the level values ​​can be recognized as the same, so it may seem to work well at the moment. However, if the over voltage is continuously applied, it can give a strain to the board in the long run, so it is better to use a level converter that converts the signal voltage level according to each other's voltage as much as possible.
 
-레벨 컨버터는 단방향, 양방향, 2채널, 4채널 등등... 몇가지 종류가 있다.
-시리얼 통신처럼 RX와 TX가 명확히 구분되어 있는 경우엔 단방향을 쓰면 되나, I2C처럼 읽기와 쓰기를 모두 같은 핀이 담당할 경우엔 양방향을 써야 한다. 또한 SPI처럼 섞여 있는 경우엔 적절히 섞어 쓰거나 그냥 양방향으로 통일해도 된다.
+There are several types of level converters: one-way, two-way, two-channel, four-channel, and so on.
+When RX and TX are clearly separated like serial communication, unidirectional can be used, but when the same pin is in charge of both read and write like I2C, bidirectional should be used. Also, if they are mixed like SPI, you can mix them appropriately or just unify them in both directions.
 
-신호에 사용하는 선의 갯수에 따라 채널의 갯수를 선택하면 된다. 기본적으로 시리얼 통신, I2C는 2채널, SPI는 4채널이 필요하다.
-(전원 레귤레이터랑은 다르다. 전원선에 이걸 연결하면 안 되고, 오직 신호선에만 이용해야 한다.)
+Select the number of channels according to the number of lines used for the signal. Basically, serial communication requires 2 channels for I2C and 4 channels for SPI.
+(It is different from the power regulator. Do not connect this to the power line, it should only be used for the signal line.)
 
-![레벨 컨버터](images/level_converter.jpg)
+![Level Converter](images/level_converter.jpg)
 
-아두이노가 5V 버전일 경우, 아두이노와 라즈베리파이 사이에 신호 레벨 컨버터를 위치시킨다.
+If the Arduino is the 5V version, place a signal level converter between the Arduino and the Raspberry Pi.
 
-![스피너 연결도](images/spinner_connect_promini_5v.jpg)
+![Spinner Connection Diagram](images/spinner_connect_promini_5v.jpg)
 
-만약 아두이노가 3.3V 버전이라면 라즈베리파이와는 다이렉트로 연결하고 대신 로터리 엔코더에서 오는 신호를 3.3V로 변환해 주기 위해서 신호 레벨 컨버터를 달아야 한다. (이 경우엔 단방향 레벨 컨버터를 사용해도 된다.)
+If the Arduino is the 3.3V version, it should be connected directly to the Raspberry Pi and a signal level converter should be installed to convert the signal from the rotary encoder to 3.3V instead. (A unidirectional level converter may be used in this case.)
 
-![스피너 연결도](images/spinner_connect_promini_3v3.jpg)
+![Spinner Connection Diagram](images/spinner_connect_promini_3v3.jpg)
 
-단순히 단방향 신호의 전압 강하이기 때문에 레벨 컨버터가 없다면 저항비를 이용해 이를 대신할 수 있다. 저항의 비율은 5V를 3.3V로 낮추는 것이기 때문에 R1:R2 비율은 17:33의 비율이면 된다.
+Since it is simply a voltage drop of a unidirectional signal, if there is no level converter, a resistance ratio can be used instead. The ratio of resistors is to lower 5V to 3.3V, so the ratio of R1:R2 should be 17:33.
 
-![스피너 연결도](images/spinner_connect_promini_3v3_resistor.jpg)
+![Spinner Connection Diagram](images/spinner_connect_promini_3v3_resistor.jpg)
 
-아두이노 보드 외에도 원칩 솔루션인 ATtiny85를 사용할 수도 있다.
+In addition to the Arduino board, you can also use the ATtiny85, a one-chip solution.
 
 ![ATtiny85](images/attiny85.jpg)
 
 ![ATtiny85 Pinout](images/attiny85_pinout.png)
 
-ATtiny85를 이용할 경우, 아두이노 보드의 쓸 때에 비해 크기면에서 유리하다. 또한 ATtiny85의 경우엔 동작 전원이 1.8V에서 5.5V까지 수용할 수 있기 때문에, 3.3V와 5V 중 하나를 선택해서 회로를 구성할 수 있다. 여기에선 3.3V를 기준으로 삼았다. 단, ATtiny85를 3.3V로 동작시킬 경우, 5V에 비해 동작 클럭이 더 떨어지게 되는데, 그래도 3.3V에서도 12MHz로 동작시킬 수 있으니 아케이드 게임 입력용으로는 충분하다.
+When using ATtiny85, it is advantageous in terms of size compared to when using an Arduino board. Also, in the case of the ATtiny85, the operating power supply can accommodate from 1.8V to 5.5V, so you can configure the circuit by selecting either 3.3V or 5V. Here, 3.3V was used as the standard. However, if the ATtiny85 is operated at 3.3V, the operating clock is lower than that of 5V, but it can be operated at 12MHz even at 3.3V, so it is sufficient for arcade game input.
 
-![스피너 연결도](images/spinner_connect_attiny85_resistor.jpg)
+![Spinner Connection Diagram](images/spinner_connect_attiny85_resistor.jpg)
 
 
-빌드 전에, src/main.cpp 상의 다음의 설정을 조정해 준다.
-조정할 대상은 I2C 주소와 Rotary Encoder의 P/R 값 등이다.
-참고로, 해당 값들 중 일부는 I2C나 Serial 커맨드 등으로 사후 조정도 가능하다.
+Before building, adjust the following settings in src/main.cpp.
+The target to be adjusted is the I2C address and the P/R value of the Rotary Encoder.
+For reference, some of these values ​​can also be adjusted post-mortem using I2C or Serial commands.
 
 ```c++
 // User Setting
@@ -114,104 +122,102 @@ ATtiny85를 이용할 경우, 아두이노 보드의 쓸 때에 비해 크기면
 //=========================================================================
 ```
 
-현재 지원하는 보드에 해당하는 설정 predefine 이다.
+This is a setting predefine that corresponds to the currently supported board.
 
-| predefine   | 지원 보드                                | 인터페이스         | 입력핀   |
-|-------------|------------------------------------------|-------------------|----------|
-| uno         | Arduino Uno                              | I2C, SPI, Serial  | A:2, B:3 |
-| promini_5v  | Arduino Pro Mini 5V                      | I2C, SPI, Serial  | A:2, B:3 |
-| promini_3v3 | Arduino Pro Mini 3.3V                    | I2C, SPI, Serial  | A:2, B:3 |
-| leonardo_5v | Arduino Leonardo, SparkFun Pro Micro 5V  | USB, Serial       | A:2, B:3 |
-| attiny85    | ATtiny85                                 | I2C               | A:3, B:4 |
+| predefine   | support board                            | interface         | input pin |
+|-------------|------------------------------------------|-------------------|-----------|
+| uno         | Arduino Uno                              | I2C, SPI, Serial  | A:2, B:3  |
+| promini_5v  | Arduino Pro Mini 5V                      | I2C, SPI, Serial  | A:2, B:3  |
+| promini_3v3 | Arduino Pro Mini 3.3V                    | I2C, SPI, Serial  | A:2, B:3  |
+| leonardo_5v | Arduino Leonardo, SparkFun Pro Micro 5V  | USB, Serial       | A:2, B:3  |
+| attiny85    | ATtiny85                                 | I2C               | A:3, B:4  |
 
 
-각 인터페이스 별 지원 커맨드들은 다음과 같다.
+Supported commands for each interface are as follows.
 
 ### Serial
 
-문자열 포맷으로 되어 있고, 각 커맨드는 CR 문자로 끝난다.
+It is in string format, and each command ends with a CR character.
 
-| command | R/W | 설명 | 타겟 |
+| command | R/W | Description | target |
 |---------|-----|------|------|
-| help | Read | 도움말 
-| version | Read | 버전
-| val | Read | 현재 로터리 카운트 값 읽기
-| val:00000 | Write | 현재 로터리 카운트 값 쓰기
-| intv | Read | 샘플링 주기 읽기
-| intv:00000 | Write | 샘플링 주기 쓰기
-| ppr | Read | 로터리 엔코더 Pulse/Revolution 읽기 | 마우스
-| ppr:00000 | Write | 로터리 엔코더 Pulse/Revolution 쓰기 | 마우스
-| dpi | Read | 마우스 Dot/Inch 읽기 | 마우스
-| dpi:00000 | Write | 마우스 Dot/Inch 쓰기 | 마우스
-| min | Read | 조이스틱 최소값 읽기 | 조이스틱
-| min:00000 | Write | 조이스틱 최소값 쓰기 | 조이스틱
-| max | Read | 조이스틱 최대값 읽기 | 조이스틱
-| max:00000 | Write | 조이스틱 최대값 쓰기 | 조이스틱
+| help | Read | Help
+| version | Read | version
+| val | Read | Read the current rotary count value
+| val:00000 | Write | Write current rotary count value
+| intv | Read | Read sampling period
+| intv:00000 | Write | Write sampling cycle
+| ppr | Read | Read Rotary Encoder Pulse/Revolution | mouse
+| ppr:00000 | Write | Write Rotary Encoder Pulse/Revolution | mouse
+| dpi | Read | Read Mouse Dot/Inch | mouse
+| dpi:00000 | Write | Write Mouse Dot/Inch | mouse
+| min | Read | Read Joystick Minimum | joystick
+| min:00000 | Write | Write Joystick Minimum | joystick
+| max | Read | Read Joystick Maximum | joystick
+| max:00000 | Write | Write Joystick Maximum | joystick
 
-결과값은 다음의 포맷을 갖고 있다.
+The result value has the following format.
 
-성공시
+on success
 ```
-suc:결과값 or 메시지
-```
-
-실패시
-```
-err:메시지
+suc: result or message
 ```
 
+on failure
+```
+err: message
+```
 
 ### I2C
+- Read : Current count value
 
-- Read : 현재의 count 값
+- Write: It has a command format consisting of 3 bytes.
 
-- Write : 3바이트로 이루어진 커맨드 포맷을 갖고 있다.
-
-|  0번째  |  1번째     |  2번째       |
+| 0th | 1st | 2nd |
 |:-------:|:----------:|:-----------:|
-| command | 상위 바이트 | 하위 바이트 |
+| command | high byte | low byte |
 
-각 command에 대한 설명이다.
+Description of each command.
 
-| command | 설명            | 타겟    |
+| command | Description | target |
 |---------|-----------------|---------|
-| 0x41    | write value     |         |
-| 0x42    | set mode        |         |
-| 0x43    | set sample rate |         |
-| 0x44    | set min value   | 조이스틱 |
-| 0x45    | set max value   | 조이스틱 |
-| 0x4F    | set i2c address |         |
+| 0x41 | write value | |
+| 0x42 | set mode | |
+| 0x43 | set sample rate | |
+| 0x44 | set min value | joystick |
+| 0x45 | set max value | joystick |
+| 0x4F | set i2c address | |
 
 ### SPI
 
-SPI 인터페이스는 3바이트로 이루어져 있고, 포맷은 다음과 같다.
+The SPI interface consists of 3 bytes, and the format is as follows.
 
-|  0번째  |  1번째     |  2번째       |
+| 0th | 1st | 2nd |
 |:-------:|:----------:|:-----------:|
-| command | 상위 바이트 | 하위 바이트 |
+| command | high byte | low byte |
 
-각 command에 대한 설명이다.
+Description of each command.
 
-| command | 설명            | 타겟     |
+| command | Description | target |
 |---------|-----------------|----------|
-| 0x00    | read value      |         |
-| 0x41    | write value     |         |
-| 0x42    | set mode        |         |
-| 0x43    | set sample rate |         |
-| 0x44    | set min value   | 조이스틱 |
-| 0x45    | set max value   | 조이스틱 |
-| 0x4F    | set i2c address |         |
+| 0x00 | read value | |
+| 0x41 | write value | |
+| 0x42 | set mode | |
+| 0x43 | set sample rate | |
+| 0x44 | set min value | joystick |
+| 0x45 | set max value | joystick |
+| 0x4F | set i2c address | |
 
 
-Arduino Leonardo 계열처럼 USB 인터페이스를 사용하지 않는 경우, 실제로 Rotary Encoder의 카운트 값을 받아서 마우스 장치로 동작하게 하기 위해서는 별도로 전용 드라이버가 존재해야 한다.
+If the USB interface is not used like the Arduino Leonardo series, a dedicated driver must exist in order to actually receive the count value of the Rotary Encoder and operate it as a mouse device.
 
-라즈베리파이의 경우, am_joyin 이라는 드라이버를 설치해서 사용하면 된다. 해당 드라이버는 다음의 링크에서 받을 수 있다.
+In the case of Raspberry Pi, you can use it by installing a driver called am_joyin. The driver can be downloaded from the following link.
 
-> [am_joyin 라즈베리파이 아케이드 조이스틱 드라이버](https://github.com/amos42/am_joyin)
+> [am_joyin Raspberry Pi Arcade Joystick Driver](https://github.com/amos42/am_joyin)
 
-드라이버가 정상적으로 동작한다면 Rotary Encoder는 일종의 마우스처럼 동작할 것이다.
-때문에 게임에서 이를 사용하기 위해서는 마우스 입력이 가능하도록 설정을 조정해 줘야 한다.
+If the driver operates normally, the Rotary Encoder will act like a kind of mouse.
+Therefore, to use it in the game, you need to adjust the settings so that mouse input is possible.
 
-이를테면, Arkanoid 등의 게임은 RetroArch 설정에서, mouse 지원을 추가해 주면 된다.
+For example, in games such as Arkanoid, you can add mouse support in RetroArch settings.
 
-![RetroArch 입력 설정](images/retroarch_setting.png)
+![RetroArch input settings](images/retroarch_setting.png)

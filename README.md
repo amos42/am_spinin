@@ -55,7 +55,13 @@ A4 and A5 pins of the control board are I2C pins, and they are SDA and SCL pins,
 
 When connecting to Raspberry Pi, connect to I2C pin or SPI pin.
 
-![Spinner Connection Diagram](images/spinner_connect_promini.jpg)
+When connecting via I2C, connect in the following form.
+
+![Spinner Connection Diagram (I2C)](images/spinner_connect_promini_i2c.jpg)
+
+When connecting via SPI, connect in the following form.
+
+![Spinner Connection Diagram (SPI)](images/spinner_connect_promini_spi.jpg)
 
 However, if the Arduino is the 5V version, the Raspberry Pi uses 3.3V, so there may be a problem if you connect it directly. If the Arduino is a 3.3V version, there will be no problem with the Raspberry Pi, but instead, there is a possibility that there is a problem because the rotary encoder uses 5V.
 

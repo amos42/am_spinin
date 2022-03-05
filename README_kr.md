@@ -58,7 +58,13 @@ Rotary Encoder의 A, B 핀은 보드의 GPIO 2번과 3번 핀에 각각 연결�
 
 라즈베리파이에 연결시, I2C 핀, 혹은 SPI 핀에 연결해 주면 된다.
 
-![스피너 연결도](images/spinner_connect_promini.jpg)
+I2C로 연결할 때는 다음과 같은 형태로 연결한다.
+
+![스피너 연결도 (I2C)](images/spinner_connect_promini_i2c.jpg)
+
+SPI로 연결할 때는 다음과 같은 형태로 연결한다.
+
+![스피너 연결도 (SPI)](images/spinner_connect_promini_spi.jpg)
 
 단, 아두이노가 5V 버전일 경우, 라즈베리파이는 3.3V를 사용하기 때문에 이를 다이렉트로 연결하면 문제가 생길 가능성이 있다. 만약 아두이노가 3.3V 버전이라면 라즈베리파이와는 문제가 없겠지만, 대신 로터리 엔코더가 5V를 사용하기 때문에 역시 문제가 생길 가능성이 있다.
 
